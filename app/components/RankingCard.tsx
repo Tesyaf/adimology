@@ -8,6 +8,7 @@ import { CheckCircle2, XCircle, MinusCircle, TrendingUp, TrendingDown, AlertCirc
 
 export default function RankingCard() {
     const router = useRouter();
+    const [mode, setMode] = useState<'watchlist' | 'lq45' | 'idx30' | 'idx80'>('watchlist');
     const [groups, setGroups] = useState<WatchlistGroup[]>([]);
     const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
     const [fromDate, setFromDate] = useState(getDefaultDate());
@@ -40,7 +41,7 @@ export default function RankingCard() {
     }, []);
 
     const handleScan = async () => {
-        if (!selectedGroupId) return;
+        if (mode === 'watchlist' && !selectedGroupId) return;
         setLoading(true);
         setError(null);
         setResults([]);
@@ -48,13 +49,15 @@ export default function RankingCard() {
         setProgress(null);
 
         try {
-            const res = await fetch(
-                `/api/ranking?groupId=${selectedGroupId}&fromDate=${fromDate}&toDate=${toDate}`
-            );
+            let url = `/api/ranking?mode=${mode}&fromDate=${fromDate}&toDate=${toDate}`;
+            if (mode === 'watchlist' && selectedGroupId) {
+                url += `&groupId=${selectedGroupId}`;
+            }
+            const res = await fetch(url);
             const json = await res.json();
 
             if (!json.success) {
-                throw new Error(json.error || 'Failed to scan watchlist');
+                throw new Error(json.error || 'Failed to scan');
             }
 
             setResults(json.data || []);
@@ -123,8 +126,38 @@ export default function RankingCard() {
 
                 {/* Controls */}
                 <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
-                    {/* Group Selector */}
-                    {!groupsLoading && groups.length > 0 && (
+                    {/* Mode Selector */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            Sumber Data
+                        </label>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                            {(['watchlist', 'lq45', 'idx30', 'idx80'] as const).map(m => (
+                                <button
+                                    key={m}
+                                    onClick={() => { setMode(m); setScanned(false); setResults([]); }}
+                                    style={{
+                                        padding: '0.35rem 0.75rem',
+                                        fontSize: '0.75rem',
+                                        fontWeight: mode === m ? 700 : 400,
+                                        background: mode === m ? 'var(--accent-primary)' : 'var(--bg-secondary)',
+                                        color: mode === m ? 'white' : 'var(--text-secondary)',
+                                        border: '1px solid',
+                                        borderColor: mode === m ? 'var(--accent-primary)' : 'var(--border-color)',
+                                        borderRadius: '6px',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.15s',
+                                        textTransform: 'uppercase',
+                                    }}
+                                >
+                                    {m === 'watchlist' ? 'Watchlist' : m.toUpperCase()}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Group Selector — hanya tampil jika mode watchlist */}
+                    {mode === 'watchlist' && !groupsLoading && groups.length > 0 && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                             <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                 Watchlist Group
@@ -198,7 +231,7 @@ export default function RankingCard() {
                     {/* Scan Button */}
                     <button
                         onClick={handleScan}
-                        disabled={loading || !selectedGroupId}
+                        disabled={loading || (mode === 'watchlist' && !selectedGroupId)}
                         style={{
                             padding: '0.5rem 1.25rem',
                             fontSize: '0.85rem',
