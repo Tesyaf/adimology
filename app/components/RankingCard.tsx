@@ -319,12 +319,12 @@ export default function RankingCard() {
 
                                         {/* Harga */}
                                         <td style={{ padding: '0.75rem 1rem', fontWeight: 600 }}>
-                                            {item.harga.toLocaleString()}
+                                            {item.harga?.toLocaleString() ?? '-'}
                                         </td>
 
                                         {/* Avg Bandar */}
                                         <td style={{ padding: '0.75rem 1rem', color: 'var(--text-secondary)' }}>
-                                            {item.avgBandar.toLocaleString()}
+                                            {item.avgBandar?.toLocaleString() ?? '-'}
                                         </td>
 
                                         {/* Target Realistis */}
@@ -337,7 +337,7 @@ export default function RankingCard() {
                                                 borderRadius: '6px',
                                                 fontSize: '0.85rem',
                                             }}>
-                                                {item.targetRealistis.toLocaleString()}
+                                                {item.targetRealistis?.toLocaleString() ?? '-'}
                                             </span>
                                         </td>
 
