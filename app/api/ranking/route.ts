@@ -129,9 +129,18 @@ export async function GET(request: NextRequest) {
             }
         }
 
-        // 3. Sort by topPersenRealistis descending (highest = closest to target)
+        // 3. Sort by topPersenRealistis ascending (terendah = paling dekat/di bawah avg bandar = peluang terbaik)
         // Items with errors (sentinel -999) go to the bottom
-        const sorted = results.sort((a, b) => b.topPersenRealistis - a.topPersenRealistis);
+        const sorted = results.sort((a, b) => {
+            // Error items always go to the bottom
+            const aIsError = a.topPersenRealistis === -999;
+            const bIsError = b.topPersenRealistis === -999;
+            if (aIsError && bIsError) return 0;
+            if (aIsError) return 1;
+            if (bIsError) return -1;
+            // Sort ascending: mendekati avg bandar (rendah) dulu
+            return a.topPersenRealistis - b.topPersenRealistis;
+        });
 
         return NextResponse.json({ success: true, data: sorted });
     } catch (error) {
