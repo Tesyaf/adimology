@@ -27,6 +27,7 @@ export function calculateTargets(
   totalOffer: number,
   harga: number
 ) {
+  // Guard: avoid division by zero if bandar avg equals target
   // Calculate Fraksi
   const fraksi = getFraksi(harga);
 
@@ -48,6 +49,16 @@ export function calculateTargets(
   // Target Max = Rata rata bandar + a + (p × Fraksi)
   const targetMax = rataRataBandar + a + (p * fraksi);
 
+  // Top% = seberapa jauh harga sudah bergerak dari avg bandar menuju target
+  const rangeRealistis = Math.round(targetRealistis1) - rataRataBandar;
+  const rangeMax = Math.round(targetMax) - rataRataBandar;
+  const topPersenRealistis = rangeRealistis !== 0
+    ? parseFloat((((harga - rataRataBandar) / rangeRealistis) * 100).toFixed(1))
+    : 0;
+  const topPersenMax = rangeMax !== 0
+    ? parseFloat((((harga - rataRataBandar) / rangeMax) * 100).toFixed(1))
+    : 0;
+
   return {
     fraksi,
     totalPapan: Math.round(totalPapan),
@@ -56,5 +67,7 @@ export function calculateTargets(
     p: Math.round(p),
     targetRealistis1: Math.round(targetRealistis1),
     targetMax: Math.round(targetMax),
+    topPersenRealistis,
+    topPersenMax,
   };
 }

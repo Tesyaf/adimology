@@ -32,8 +32,8 @@ const Navbar = () => {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <div className="nav-links" style={{ display: 'flex', gap: '1.5rem' }}>
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               style={{
                 textDecoration: 'none',
                 color: pathname === '/' ? 'var(--text-primary)' : 'var(--text-secondary)',
@@ -46,8 +46,8 @@ const Navbar = () => {
             >
               Calculator
             </Link>
-            <Link 
-              href="/history" 
+            <Link
+              href="/history"
               style={{
                 textDecoration: 'none',
                 color: pathname === '/history' ? 'var(--text-primary)' : 'var(--text-secondary)',
@@ -60,8 +60,8 @@ const Navbar = () => {
             >
               History
             </Link>
-            <Link 
-              href="/summary" 
+            <Link
+              href="/summary"
               style={{
                 textDecoration: 'none',
                 color: pathname === '/summary' ? 'var(--text-primary)' : 'var(--text-secondary)',
@@ -74,9 +74,23 @@ const Navbar = () => {
             >
               Summary
             </Link>
-            <a 
-              href="https://github.com/bhaktiutama/adimology" 
-              target="_blank" 
+            <Link
+              href="/ranking"
+              style={{
+                textDecoration: 'none',
+                color: pathname === '/ranking' ? 'var(--text-primary)' : 'var(--text-secondary)',
+                fontWeight: pathname === '/ranking' ? 600 : 400,
+                fontSize: '0.9rem',
+                borderBottom: pathname === '/ranking' ? '2px solid var(--accent-primary)' : '2px solid transparent',
+                paddingBottom: '2px',
+                transition: 'all 0.2s'
+              }}
+            >
+              Ranking
+            </Link>
+            <a
+              href="https://github.com/bhaktiutama/adimology"
+              target="_blank"
               rel="noopener noreferrer"
               style={{
                 display: 'flex',

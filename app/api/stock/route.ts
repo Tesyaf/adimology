@@ -32,41 +32,41 @@ export async function POST(request: NextRequest) {
     const brokerData = getTopBroker(marketDetectorData);
 
     if (!brokerData) {
-       // Attempt to fetch latest historical data
-       const historyData = await getLatestStockQuery(emiten);
-       
-       if (historyData) {
-         return NextResponse.json({
-           success: true,
-           data: {
-             input: { emiten, fromDate: historyData.from_date, toDate: historyData.to_date },
-             stockbitData: {
-               bandar: historyData.bandar,
-               barangBandar: historyData.barang_bandar,
-               rata_rata_bandar: historyData.rata_rata_bandar
-             },
-             marketData: {
-                harga: historyData.harga,
-                offerTeratas: historyData.ara,
-                bidTerbawah: historyData.arb,
-                totalBid: historyData.total_bid,
-                totalOffer: historyData.total_offer,
-                fraksi: historyData.fraksi
-             },
-             calculated: {
-                totalPapan: historyData.total_papan,
-                rata_rata_bid_ofer: historyData.rata_rata_bid_ofer,
-                a: historyData.a,
-                p: historyData.p,
-                target_realistis: historyData.target_realistis,
-                target_max: historyData.target_max
-             },
-             brokerSummary: null,
-             isFromHistory: historyData.from_date !== fromDate || historyData.to_date !== toDate,
-             historyDate: historyData.from_date
-           }
-         });
-       }
+      // Attempt to fetch latest historical data
+      const historyData = await getLatestStockQuery(emiten);
+
+      if (historyData) {
+        return NextResponse.json({
+          success: true,
+          data: {
+            input: { emiten, fromDate: historyData.from_date, toDate: historyData.to_date },
+            stockbitData: {
+              bandar: historyData.bandar,
+              barangBandar: historyData.barang_bandar,
+              rata_rata_bandar: historyData.rata_rata_bandar
+            },
+            marketData: {
+              harga: historyData.harga,
+              offerTeratas: historyData.ara,
+              bidTerbawah: historyData.arb,
+              totalBid: historyData.total_bid,
+              totalOffer: historyData.total_offer,
+              fraksi: historyData.fraksi
+            },
+            calculated: {
+              totalPapan: historyData.total_papan,
+              rata_rata_bid_ofer: historyData.rata_rata_bid_ofer,
+              a: historyData.a,
+              p: historyData.p,
+              target_realistis: historyData.target_realistis,
+              target_max: historyData.target_max
+            },
+            brokerSummary: null,
+            isFromHistory: historyData.from_date !== fromDate || historyData.to_date !== toDate,
+            historyDate: historyData.from_date
+          }
+        });
+      }
 
       return NextResponse.json(
         {
@@ -147,6 +147,8 @@ export async function POST(request: NextRequest) {
           p: calculated.p,
           targetRealistis1: calculated.targetRealistis1,
           targetMax: calculated.targetMax,
+          topPersenRealistis: calculated.topPersenRealistis,
+          topPersenMax: calculated.topPersenMax,
         },
         brokerSummary,
         sector,

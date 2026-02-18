@@ -105,6 +105,22 @@ export interface CalculatedData {
   p: number;
   targetRealistis1: number;
   targetMax: number;
+  topPersenRealistis: number;
+  topPersenMax: number;
+}
+
+export interface RankingItem {
+  emiten: string;
+  harga: number;
+  avgBandar: number;
+  targetRealistis: number;
+  targetMax: number;
+  topPersenRealistis: number;
+  topPersenMax: number;
+  gainRealistis: number; // % gain dari harga ke target realistis
+  sector?: string;
+  flag?: 'OK' | 'NG' | 'Neutral' | null;
+  error?: string; // jika gagal fetch
 }
 
 export interface StockAnalysisResult {
